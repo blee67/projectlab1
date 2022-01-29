@@ -1,0 +1,71 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 01/29/2022 12:23:44 PM
+// Design Name: 
+// Module Name: miniproject_1
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module miniproject_1(
+    input SW0,
+    input SW1,
+    input SW2,
+    input SW3,
+    input SW4,
+    input SW5,
+    input SW6,
+    input SW7,
+    input clock,
+    input [1:0] speed, 
+    input reset,
+    output PWM
+    );
+    
+    
+    reg [4:0] counter; // sets the period 11111 + 1 = 00000
+    reg [4:0] width;
+    reg temp_PWM;
+    
+    initial begin
+        counter = 0;
+        width = 0;
+        temp_PWM = 0;
+    end
+    
+    always@(posedge clock) begin
+        if(reset)
+            counter <= 0;
+        else
+            counter <= counter + 1;
+            
+        if(counter < width)
+            temp_PWM <= 1;
+        else
+            temp_PWM <= 0;
+    end
+    
+    always @ (*) begin
+        case(speed)
+            2'd0 : width =5'd0;
+            2'd1 : width =5'd8;
+            2'd2 : width =5'd16;
+            2'd3 : width =5'd24;
+            default : width =5'd0;
+        endcase
+    end
+    assign PWM = temp_PWM;
+endmodule
