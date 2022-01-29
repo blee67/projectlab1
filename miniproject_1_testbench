@@ -1,0 +1,88 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 01/29/2022 12:30:17 PM
+// Design Name: 
+// Module Name: miniproject_1_testbench
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module miniproject_1_testbench(
+    );
+    
+    reg SW0;
+    reg SW1;
+    reg SW2;
+    reg SW3;
+    reg SW4;
+    reg SW5;
+    reg SW6;
+    reg SW7;
+    reg clock;
+    reg [1:0] speed; 
+    reg reset;
+    wire PWM;
+    
+    //instantiation
+    miniproject_1 UUT(SW0,SW1,SW2,SW3,SW4,SW5,SW6,SW7,clock,speed,reset,PWM);
+    
+    initial begin
+        SW0 = 0;
+        SW1 = 0;
+        SW2 = 0;
+        SW3 = 0;
+        SW4 = 0;
+        SW5 = 0;
+        SW6 = 0;
+        SW7 = 0;
+        clock = 0;
+        speed = 0;
+        reset = 0;
+        #10;
+        SW0 = 1;
+        SW1 = 1;
+        SW2 = 1;
+        SW3 = 1;
+        SW4 = 1;
+        SW5 = 1;
+        SW6 = 1;
+        SW7 = 1;
+        #10;
+        SW0 = 0;
+        SW1 = 0;
+        SW2 = 0;
+        SW3 = 0;
+        SW4 = 0;
+        SW5 = 0;
+        SW6 = 0;
+        SW7 = 0;
+        #500;
+        speed = 1;
+        reset = 0;
+        #500;
+        speed = 2;
+        reset = 0;
+        #500;
+        speed = 3;
+        reset = 0;
+        #500;
+        speed = 0;
+        reset = 1;
+        #10;
+        speed = 0;
+        reset = 0;
+    end
+endmodule
