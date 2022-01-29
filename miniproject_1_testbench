@@ -51,7 +51,7 @@ module miniproject_1_testbench(
         clock = 0;
         speed = 0;
         reset = 0;
-        #10;
+        #250;
         SW0 = 1;
         SW1 = 1;
         SW2 = 1;
@@ -60,7 +60,7 @@ module miniproject_1_testbench(
         SW5 = 1;
         SW6 = 1;
         SW7 = 1;
-        #10;
+        #250;
         SW0 = 0;
         SW1 = 0;
         SW2 = 0;
@@ -69,20 +69,25 @@ module miniproject_1_testbench(
         SW5 = 0;
         SW6 = 0;
         SW7 = 0;
-        #500;
+        #250;
         speed = 1;
         reset = 0;
-        #500;
+        #250;
         speed = 2;
         reset = 0;
-        #500;
+        #250;
         speed = 3;
         reset = 0;
-        #500;
+        #250;
         speed = 0;
         reset = 1;
         #10;
         speed = 0;
         reset = 0;
     end
+    
+    always begin
+    #1 clock = ~clock;
+    end
+    
 endmodule
