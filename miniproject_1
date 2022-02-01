@@ -21,22 +21,14 @@
 
 
 module miniproject_1(
-    input SW0,
-    input SW1,
-    input SW2,
-    input SW3,
-    input SW4,
-    input SW5,
-    input SW6,
-    input SW7,
-    input clock,
-    input [1:0] speed, 
+    input clk;
+    input [7:0] speed, 
     input reset,
     output PWM
     );
     
     
-    reg [4:0] counter; // sets the period 11111 + 1 = 00000
+    reg [4:0] counter;
     reg [4:0] width;
     reg temp_PWM;
     
@@ -46,7 +38,7 @@ module miniproject_1(
         temp_PWM = 0;
     end
     
-    always@(posedge clock) begin
+    always@(posedge clk) begin
         if(reset)
             counter <= 0;
         else
