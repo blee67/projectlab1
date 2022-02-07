@@ -3,7 +3,7 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 01/29/2022 12:23:44 PM
+// Create Date: 01/31/2022 02:05:58 PM
 // Design Name: 
 // Module Name: miniproject_1
 // Project Name: 
@@ -21,15 +21,15 @@
 
 
 module miniproject_1(
-    input clk;
-    input [7:0] speed, 
-    input reset,
+    input clk, // clock
+    input reset, // reset value for button reset
+    input [3:0] sw,
+    input [1:0] speed,
     output PWM
     );
     
-    
-    reg [4:0] counter;
-    reg [4:0] width;
+    reg [20:0] counter;`
+    reg [20:0] width;
     reg temp_PWM;
     
     initial begin
@@ -50,14 +50,31 @@ module miniproject_1(
             temp_PWM <= 0;
     end
     
+    always@(*)begin
+        if (sw[0]) begin
+            speed = 0;
+        end
+        else if (sw[1]) begin
+            speed = 1;
+        end
+        else if (sw[2]) begin
+            speed = 2;
+        end
+        else if (sw[3]) begin
+            speed = 3;
+        end
+    end
+    
     always @ (*) begin
         case(speed)
-            2'd0 : width =5'd0;
-            2'd1 : width =5'd8;
-            2'd2 : width =5'd16;
-            2'd3 : width =5'd24;
-            default : width =5'd0;
+            2'd0 : width =21'd416666;
+            2'd1 : width =21'd833333;
+            2'd2 : width =21'd1250000;
+            2'd3 : width =21'd1583332;
+            default : width =21'd0;
         endcase
     end
-    assign PWM = temp_PWM;
+    
+    assign PWM = temp_PWM; 
+    
 endmodule
