@@ -20,16 +20,28 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module miniproject_1(
+module miniproj1(
     input clk, // clock
     input reset, // reset value for button reset
-    input [3:0] sw,
     input [1:0] speed,
-    output PWM
+    input [15:0] sw,
+    input sensA, sensB,
+    output [15:0] LED,
+    output ena, enb,
+    output in1, in2, in3, in4,
+    
+    output f, b,
+    output [3:0] an
     );
     
-    reg [20:0] counter;`
-    reg [20:0] width;
+    localparam N = 18;
+    reg [N-1:0] count;
+    reg [1:0] sseg_temp;
+    reg [1:0] sseg;
+    reg [3:0] an_temp;
+    
+    reg [24:0] counter = 0;
+    reg [19:0] width;
     reg temp_PWM;
     
     initial begin
@@ -39,42 +51,71 @@ module miniproject_1(
     end
     
     always@(posedge clk) begin
-        if(reset)
-            counter <= 0;
-        else
+        if(counter <= 2000000)
             counter <= counter + 1;
-            
-        if(counter < width)
-            temp_PWM <= 1;
         else
-            temp_PWM <= 0;
+            counter <= 0;
     end
     
-    always@(*)begin
-        if (sw[0]) begin
-            speed = 0;
-        end
-        else if (sw[1]) begin
-            speed = 1;
-        end
-        else if (sw[2]) begin
-            speed = 2;
-        end
-        else if (sw[3]) begin
-            speed = 3;
-        end
+    always @ (posedge clk or posedge reset) begin
+    if (reset)
+        count <= 0;
+    else
+        count <= count + 1;
     end
     
     always @ (*) begin
-        case(speed)
-            2'd0 : width =21'd416666;
-            2'd1 : width =21'd833333;
-            2'd2 : width =21'd1250000;
-            2'd3 : width =21'd1583332;
-            default : width =21'd0;
+        case({speed})
+            20'd1 : width = 20'd400144;
+            20'd2 : width = 20'd8333333;
+            20'd3 : width = 20'd1600000;
+            default : width = 20'd0;
         endcase
     end
     
-    assign PWM = temp_PWM; 
+    always @ (*)
+        begin case(count[N-1:N-2])
+            2'b00:
+                begin
+                    an_temp = 4'b1110;
+                end
+        endcase
+    end
+    
+    assign an = an_temp;
+    
+//    always @ (*) begin
+//        case(sseg)
+//            4'd0 : sseg_temp = 2'b1100000;
+//            4'd1 : sseg_temp = 2'b0111000;
+//            default : sseg_temp = 2'b0111111;
+//        endcase
+//    end
+    
+    always @ (*) begin
+        if(sw[2] == 0 || sw[3] == 0)
+            case(sseg)
+                2'd0 : sseg_temp = 3'b1100000;
+            default : sseg_temp = 3'b0000001;
+            endcase
+        if(sw[2] == 1 || sw[3] == 1)
+            case(sseg)
+                2'd1 : sseg_temp = 3'b0111000;
+            default : sseg_temp = 3'b0000001;
+            endcase
+    end
+    assign {f,b} = sseg_temp;
+    
+    //tertiary operator (?) -> If sw 1 on then hbridge IN = 1001 else 0110
+    assign ena = ((sw[5] == 1) && ((sw[4] == 1 && counter < 800000) || (sw[4] == 0 && counter < 3000000))) ? 1:0;
+    assign in1 = (sw[3] ==  1) ? 1:0;
+    assign in2 = (~(sw[3] == 1)) ? 1:0;
+    
+    assign enb = ((sw[0] == 1) && ((sw[1] == 1 && counter < 800000) || (sw[1] == 0 && counter < 3000000))) ? 1:0;
+    assign in3 = (sw[2] == 1) ? 1:0;
+    assign in4 = (~(sw[2] == 1)) ? 1:0;
+    
+    assign LED6 = (sensB == 1) ? 1:0;
+    assign LED7 = (sensA == 1) ? 1:0; 
     
 endmodule
